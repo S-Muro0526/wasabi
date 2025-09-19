@@ -1,0 +1,17 @@
+# Configuration file with sensitive credentials
+config.csv
+
+# Default download directory
+Download/
+
+# Python virtual environment
+venv/
+.venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# IDE/Editor specific files
+.idea/
+.vscode/
