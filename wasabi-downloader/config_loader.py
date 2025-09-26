@@ -44,4 +44,8 @@ def load_config(config_path: str = 'config.csv') -> Dict[str, str]:
     if 'mfa_serial_number' in config and pd.isna(config['mfa_serial_number']):
         config['mfa_serial_number'] = None
 
+    # Handle optional ssl_verify_path
+    if 'ssl_verify_path' in config and (pd.isna(config['ssl_verify_path']) or not str(config['ssl_verify_path']).strip()):
+        config['ssl_verify_path'] = None
+
     return config

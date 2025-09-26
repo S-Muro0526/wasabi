@@ -36,10 +36,18 @@ def get_s3_client(config: Dict[str, str], mfa_token: Optional[str] = None):
                 "aws_session_token": credentials['SessionToken'],
             }
 
+        client_params = {
+            'endpoint_url': config['endpoint_url'],
+            **session_params
+        }
+
+        # Add custom SSL certificate if provided
+        if config.get('ssl_verify_path'):
+            client_params['verify'] = config['ssl_verify_path']
+
         s3_client = boto3.client(
             's3',
-            endpoint_url=config['endpoint_url'],
-            **session_params
+            **client_params
         )
         return s3_client
     except (NoCredentialsError, ClientError) as e:

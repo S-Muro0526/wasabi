@@ -40,6 +40,7 @@ mfa_serial_number,YOUR_MFA_SERIAL_NUMBER_ARN (optional)
 | `endpoint_url` | WasabiのS3互換APIエンドポイントURLです。通常はこのままで問題ありません。 |
 | `bucket_name` | ダウンロード対象のファイルが格納されているバケット名を入力します。 |
 | `mfa_serial_number` | **【任意】** MFA認証を行う場合、IAMユーザーに紐づくMFAデバイスのARNを入力します。不要な場合は空欄のままにしてください。 |
+| `ssl_verify_path` | **【任意】** プロキシ環境下などで、カスタムSSL証明書（`.pem`ファイルなど）のパスを指定します。 |
 
 ### 3.1. MFA認証について
 
@@ -52,6 +53,18 @@ Enter MFA Token:
 
 お使いの認証アプリケーション（例: Google Authenticator, Authy）に表示されている6桁のワンタイムパスワード（OTP）を入力し、`Enter`キーを押してください。
 認証が成功すると、通常の処理が続行されます。
+
+### 3.2. プロキシ環境とSSL証明書
+
+企業内プロキシなどを経由して通信を行う際、SSLインスペクション（通信の復号・再暗号化）が行われることがあります。
+このような環境では、`SSL validation failed` というエラーが発生する場合があります。
+
+この問題を解決するには、プロキシが使用するカスタムSSL証明書（通常は`.pem`形式）のフルパスを`config.csv`の`ssl_verify_path`に設定してください。
+
+**設定例:**
+```csv
+ssl_verify_path,C:\certs\my-proxy-ca.pem
+```
 
 ## 4. 使用方法
 
