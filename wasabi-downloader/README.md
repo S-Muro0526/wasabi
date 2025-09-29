@@ -117,3 +117,19 @@ python wasabi_downloader.py download_versioned --timestamp "20240101" --source "
 - `--timestamp`: **[必須]** 取得したい過去の時点を示す日付。フォーマットは`YYYYMMDD`。
 - `--source`: **[任意]** ダウンロード対象のディレクトリパス。指定しない場合はバケット全体が対象となります。
 - `--destination`: **[任意]** ローカル保存先ディレクトリパス。指定しない場合、実行ディレクトリ配下に`Download`フォルダが作成され、その中に保存されます。
+
+### 4.4. ファイルの再帰的リスト表示 (`list_files`)
+
+Wasabi上の特定のディレクトリ（プレフィックス）配下、またはバケット全体のすべてのファイルキーを再帰的にリスト表示します。
+
+**コマンド例:**
+```bash
+# 特定のディレクトリのファイルをリスト表示
+python wasabi_downloader.py list_files --source "path/to/remote_dir/"
+
+# バケット全体のファイルをリスト表示
+python wasabi_downloader.py list_files
+```
+
+**引数:**
+- `--source`: **[任意]** リスト表示対象のディレクトリパス。指定しない場合はバケット全体が対象となります。
