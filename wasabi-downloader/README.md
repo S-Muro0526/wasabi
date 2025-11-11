@@ -40,6 +40,7 @@ mfa_serial_number,YOUR_MFA_SERIAL_NUMBER_ARN (optional)
 | `endpoint_url` | WasabiのS3互換APIエンドポイントURLです。通常はこのままで問題ありません。 |
 | `bucket_name` | ダウンロード対象のファイルが格納されているバケット名を入力します。 |
 | `mfa_serial_number` | **【任意】** MFA認証を行う場合、IAMユーザーに紐づくMFAデバイスのARNを入力します。不要な場合は空欄のままにしてください。 |
+| `ssl_verify_path` | **【任意】** プロキシ環境下などで、カスタムSSL証明書（`.pem`ファイルなど）のパスを指定します。 |
 
 ### 3.1. MFA認証について
 
@@ -52,6 +53,18 @@ Enter MFA Token:
 
 お使いの認証アプリケーション（例: Google Authenticator, Authy）に表示されている6桁のワンタイムパスワード（OTP）を入力し、`Enter`キーを押してください。
 認証が成功すると、通常の処理が続行されます。
+
+### 3.2. プロキシ環境とSSL証明書
+
+企業内プロキシなどを経由して通信を行う際、SSLインスペクション（通信の復号・再暗号化）が行われることがあります。
+このような環境では、`SSL validation failed` というエラーが発生する場合があります。
+
+この問題を解決するには、プロキシが使用するカスタムSSL証明書（通常は`.pem`形式）のフルパスを`config.csv`の`ssl_verify_path`に設定してください。
+
+**設定例:**
+```csv
+ssl_verify_path,C:\certs\my-proxy-ca.pem
+```
 
 ## 4. 使用方法
 
@@ -104,3 +117,19 @@ python wasabi_downloader.py download_versioned --timestamp "20240101" --source "
 - `--timestamp`: **[必須]** 取得したい過去の時点を示す日付。フォーマットは`YYYYMMDD`。
 - `--source`: **[任意]** ダウンロード対象のディレクトリパス。指定しない場合はバケット全体が対象となります。
 - `--destination`: **[任意]** ローカル保存先ディレクトリパス。指定しない場合、実行ディレクトリ配下に`Download`フォルダが作成され、その中に保存されます。
+
+### 4.4. ファイルの再帰的リスト表示 (`list_files`)
+
+Wasabi上の特定のディレクトリ（プレフィックス）配下、またはバケット全体のすべてのファイルキーを再帰的にリスト表示します。
+
+**コマンド例:**
+```bash
+# 特定のディレクトリのファイルをリスト表示
+python wasabi_downloader.py list_files --source "path/to/remote_dir/"
+
+# バケット全体のファイルをリスト表示
+python wasabi_downloader.py list_files
+```
+
+**引数:**
+- `--source`: **[任意]** リスト表示対象のディレクトリパス。指定しない場合はバケット全体が対象となります。

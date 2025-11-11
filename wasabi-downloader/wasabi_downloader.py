@@ -53,6 +53,10 @@ def main():
     parser_ver.add_argument('--source', default='', help='The source directory (prefix) to download. Defaults to the entire bucket.')
     parser_ver.add_argument('--destination', help='Local directory to save files. Defaults to "./Download/".')
 
+    # --- list_files ---
+    parser_list = subparsers.add_parser('list_files', help='Recursively list files in a given prefix.')
+    parser_list.add_argument('--source', default='', help='The source directory (prefix) to list. Defaults to the entire bucket.')
+
     args = parser.parse_args()
 
     try:
@@ -87,6 +91,19 @@ def main():
                     s3_client, bucket_name, args.source, destination_path, pbar.update
                 )
             print(f"\nSuccessfully downloaded 1 file.")
+
+        elif args.command == 'list_files':
+            print(f"Listing files in: '{args.source if args.source else 'bucket root'}'")
+            object_list, _ = s3_handler.list_objects_in_prefix(s3_client, bucket_name, args.source)
+
+            if not object_list:
+                print("No files found in the specified path.")
+                return
+
+            for obj in object_list:
+                print(obj['Key'])
+
+            print(f"\nTotal files found: {len(object_list)}")
 
         elif args.command in ['download_dir', 'download_versioned']:
             destination_dir = args.destination if args.destination else get_default_download_dir()
